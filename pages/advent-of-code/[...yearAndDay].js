@@ -17,11 +17,11 @@ const CalendarList = styled("ul")({
     for (let i = 1; i <= 7; i += 1) {
       const weekDay = i % 7;
       daysRules[`& > li[data-weekday="${weekDay}"]`] = {
-        gridColumnStart: i
+        gridColumnStart: i,
       };
     }
     return daysRules;
-  })()
+  })(),
 });
 
 const AoCIframe = emStyled.iframe`
@@ -105,25 +105,26 @@ export default function AdventOfCode() {
                 })}
               </CalendarList>
             </div>
-            {!DayComponent ? (
-              <div>Select a day, please</div>
-            ) : (
-              <>
-                <div>
-                  <h2>{`Day ${day}`}</h2>
-                  <AoCIframe
-                    title="Challenge description"
-                    src={`https://adventofcode.com/${year}/day/${day}`}
-                  />
-                </div>
-                <div>
-                  <DayComponent />
-                </div>
-              </>
-            )}
           </>
         )}
       </div>
+      {!DayComponent ? (
+        <div>Select a day, please</div>
+      ) : (
+        [
+          <div key="description">
+            <h2>{`Day ${day}`}</h2>
+            <AoCIframe
+              title="Challenge description"
+              src={`https://adventofcode.com/${year}/day/${day}`}
+            />
+          </div>,
+          <div key="day-component">
+            <h2>Solution</h2>
+            <DayComponent />
+          </div>,
+        ]
+      )}
     </MainLayout>
   );
 }
