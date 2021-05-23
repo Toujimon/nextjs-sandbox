@@ -3,10 +3,12 @@ import { useRouter } from "next/router";
 import MainLayout from "../../components/mainLayout";
 import Link from "next/link";
 import { styled, Typography } from "@material-ui/core";
+import emStyled from "@emotion/styled";
 
 const CalendarList = styled("ul")({
-  display: "grid",
-  gridTemplateColumns: "repeat(7, auto)",
+  display: "inline-grid",
+  gridTemplateColumns: "repeat(7, 32px)",
+  gridAutoRows: "32px",
   listStyle: "none",
   margin: 0,
   padding: 0,
@@ -15,12 +17,17 @@ const CalendarList = styled("ul")({
     for (let i = 1; i <= 7; i += 1) {
       const weekDay = i % 7;
       daysRules[`& > li[data-weekday="${weekDay}"]`] = {
-        gridColumnStart: i
+        gridColumnStart: i,
       };
     }
     return daysRules;
-  })()
+  })(),
 });
+
+const AoCIframe = emStyled.iframe`
+  width: 100%;
+  min-height: 600px;
+`;
 
 export default function AdventOfCode() {
   const [dayComponents, setDayComponents] = useState(null);
@@ -54,43 +61,69 @@ export default function AdventOfCode() {
       loadDayComponents();
     }
   }, [year]);
+  useEffect(() => {
+    // Fetch data for the day dinamically
+  }, [year, day]);
   const DayComponent = dayComponents?.[day - 1] ?? null;
   return (
     <MainLayout>
-      <header>
-        Advent of Code {year}{" "}
-        <Link href="/advent-of-code">
-          <a>Go back</a>
-        </Link>
-      </header>
-      <Typography variant="caption" component="p">
-        JFYI: All the components for the days are being dynamically imported
-        based on the path information.
-      </Typography>
-      {dayComponents == null ? (
-        `...loading days`
+      <div>
+        <header>
+          <h1>Advent of Code {year}</h1>
+          <Link href="/advent-of-code">
+            <a>Go back</a>
+          </Link>
+        </header>
+        <Typography variant="caption" component="p">
+          JFYI: All the components for the days are being dynamically imported
+          based on the path information.
+        </Typography>
+        {dayComponents == null ? (
+          `...loading days`
+        ) : (
+          <>
+            <div>
+              <p>There are solutions for {dayComponents.length} days:</p>
+              <CalendarList>
+                {daysOfTheMonth.map((dayDate, index) => {
+                  const hasComponent = !!dayComponents[index];
+                  const thisDay = index + 1;
+                  return (
+                    <li key={thisDay} data-weekday={dayDate.getDay()}>
+                      {!hasComponent ? (
+                        <span>{thisDay}</span>
+                      ) : (
+                        <Link
+                          href={`/advent-of-code/${year}/${thisDay}`}
+                          shallow
+                        >
+                          <a>{thisDay}</a>
+                        </Link>
+                      )}
+                    </li>
+                  );
+                })}
+              </CalendarList>
+            </div>
+          </>
+        )}
+      </div>
+      {!DayComponent ? (
+        <div>Select a day, please</div>
       ) : (
-        <div>
-          <p>There are solutions for {dayComponents.length} days:</p>
-          <CalendarList>
-            {daysOfTheMonth.map((dayDate, index) => {
-              const hasComponent = !!dayComponents[index];
-              const thisDay = index + 1;
-              return (
-                <li key={thisDay} data-weekday={dayDate.getDay()}>
-                  {!hasComponent ? (
-                    <span>{thisDay}</span>
-                  ) : (
-                    <Link href={`/advent-of-code/${year}/${thisDay}`} shallow>
-                      <a>{thisDay}</a>
-                    </Link>
-                  )}
-                </li>
-              );
-            })}
-          </CalendarList>
-          <div>{!DayComponent ? "Select a day, please" : <DayComponent />}</div>
-        </div>
+        [
+          <div key="description">
+            <h2>{`Day ${day}`}</h2>
+            <AoCIframe
+              title="Challenge description"
+              src={`https://adventofcode.com/${year}/day/${day}`}
+            />
+          </div>,
+          <div key="day-component">
+            <h2>Solution</h2>
+            <DayComponent />
+          </div>,
+        ]
       )}
     </MainLayout>
   );
