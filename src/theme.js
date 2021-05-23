@@ -4,21 +4,10 @@ import { red } from "@material-ui/core/colors";
 /* Shamelessly stolen from the code given in
 https://github.com/mui-org/material-ui/tree/master/examples/nextjs
  */
-const theme = createMuiTheme({
+export const lightTheme = createMuiTheme();
+
+export const darkTheme = createMuiTheme({
   palette: {
-    primary: {
-      main: "#556cd6"
-    },
-    secondary: {
-      main: "#19857b"
-    },
-    error: {
-      main: red.A400
-    },
-    background: {
-      default: "#fff"
-    }
+    type: "dark"
   }
 });
-
-export default theme;

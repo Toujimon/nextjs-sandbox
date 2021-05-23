@@ -1,3 +1,4 @@
+import React, { useContext, useMemo } from "react";
 import {
   Container,
   AppBar,
@@ -7,8 +8,10 @@ import {
   Typography,
   Avatar
 } from "@material-ui/core";
+import scStyled from "styled-components";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import ThemeTypeContext from "../src/themeTypeContext";
 
 export const defaultTitle = "My Own Test Site";
 
@@ -27,7 +30,9 @@ const StyledContainer = styled(Container)(({ theme }) => ({
   gap: theme.spacing(2)
 }));
 
-const StyledTopBanner = styled("div")(({ theme, background, textColor }) => ({
+const StyledTopBanner = styled(({ textColor, background, ...rest }) => (
+  <div {...rest} />
+))(({ theme, background, textColor }) => ({
   ...(background
     ? { backgroundImage: `url(${background})`, backgroundSize: "cover" }
     : { backgroundColor: "transparent" }),
@@ -45,13 +50,40 @@ const StyledAvatar = styled(Avatar)({
   height: 120
 });
 
+/* Using material UI all around. Let's add something from
+Styled Components */
+const ScStyledMain = scStyled.main`
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px solid black;
+  box-shadow: 10px 5px 5px ${({ theme }) => theme.palette.primary.main}
+`;
+
+const HOME_SUBPATH = "/";
+const tabsValues = [
+  [HOME_SUBPATH, "Home"],
+  // ["/about", "About"],
+  ["/lab", "Lab"],
+  ["/bgg-explorer", "BGG Explorer"],
+  ["/advent-of-code", "Advent of Code"],
+  ["/something", "Something"]
+];
+
+function getTabValue(pathname) {
+  const [, subPath] = /^(\/\S+)(\/\S*)*$/.exec(pathname) ?? [];
+  if (!subPath) {
+    return tabsValues[0][0];
+  }
+  return tabsValues.find(([x]) => x === subPath)?.[0] ?? false;
+}
+
 export default function MainLayout({ children, title = defaultTitle }) {
   const router = useRouter();
-  const secondSegmentIndex = router.pathname.slice(1).indexOf("/");
-  const subPath =
-    secondSegmentIndex >= 0
-      ? router.pathname.slice(0, secondSegmentIndex + 1)
-      : router.pathname;
+  const tabValue = useMemo(() => getTabValue(router.pathname), [
+    router.pathname
+  ]);
+  const { type, setType } = useContext(ThemeTypeContext);
+
   return (
     <>
       <Head>
@@ -59,16 +91,15 @@ export default function MainLayout({ children, title = defaultTitle }) {
       </Head>
       <StyledAppBar position="sticky">
         <StyledAppBarTabs
-          value={subPath}
+          value={tabValue}
           onChange={(e, newValue) => router.push(newValue)}
         >
-          <Tab value="/" label="Home" />
-          <Tab value="/about" label="About" />
-          <Tab value="/advent-of-code" label="Advent of Code" />
-          <Tab value="/something" label="Something" />
+          {tabsValues.map(([value, label]) => (
+            <Tab key={value} value={value} label={label} />
+          ))}
         </StyledAppBarTabs>
       </StyledAppBar>
-      {subPath.length <= 1 && (
+      {tabValue === tabsValues[0][0] && (
         <StyledTopBanner background="/home-banner.jpg" textColor="white">
           <Typography gutterBottom variant="h3">
             Gonzalo Arrivi's Sandbox
@@ -77,8 +108,33 @@ export default function MainLayout({ children, title = defaultTitle }) {
         </StyledTopBanner>
       )}
       <StyledContainer>
-        <main>{children}</main>
+        {React.Children.map(children, (child) => (
+          <ScStyledMain>{child}</ScStyledMain>
+        ))}
       </StyledContainer>
+      <fieldset>
+        <legend>Theme:</legend>
+        <label>
+          <input
+            type="radio"
+            name="color"
+            value="light"
+            checked={type === "light"}
+            onChange={() => setType("light")}
+          />{" "}
+          Light
+        </label>{" "}
+        <label>
+          <input
+            type="radio"
+            name="color"
+            value="dark"
+            checked={type === "dark"}
+            onChange={() => setType("dark")}
+          />{" "}
+          Dark
+        </label>
+      </fieldset>
     </>
   );
 }
