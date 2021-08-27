@@ -26,5 +26,8 @@
   },
   "license": "MIT",
   "keywords": [],
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "prettier": "2.3.2"
+  }
 }
