@@ -104,7 +104,7 @@ export default function MainLayout({ children, title = defaultTitle }) {
           <Typography gutterBottom variant="h3">
             Gonzalo Arrivi's Sandbox
           </Typography>
-          <StyledAvatar src="/home-avatar.jpeg" />
+          <StyledAvatar src="/home-avatar.jpg" />
         </StyledTopBanner>
       )}
       <StyledContainer>
