@@ -1,6 +1,7 @@
 import { useContext, useState, useMemo, useRef, useEffect } from "react";
 import MainLayout from "../components/mainLayout";
 import MyTooltip, { useMyTooltip } from "../components/myTooltip";
+import IntersectionDetectorSample from "../components/lab/intersectionDetectorSample";
 import { RelevantContentContext } from "../src/contexts";
 
 function PopperJSSample() {
@@ -82,14 +83,14 @@ function RelevantContentSample() {
       isRelevant: (key) => !notRelevantElements.includes(key),
       markAsIrrelevant: (key) => {
         setNotRelevantElements((prev) => prev.concat(key));
-      }
+      },
     };
   }, [notRelevantElements]);
 
   const [orderedElements, setOrderedElements] = useState([]);
   const orderedElementsChecker = useRef({
     seen: new Set(orderedElements),
-    list: orderedElements
+    list: orderedElements,
   });
   const onlyOneRelevant = useMemo(() => {
     return {
@@ -111,7 +112,7 @@ function RelevantContentSample() {
           orderedElementsChecker.current.list = newList;
           setOrderedElements(newList);
         }
-      }
+      },
     };
   }, [orderedElements]);
   useEffect(() => {
@@ -158,12 +159,97 @@ function RelevantContentSample() {
   );
 }
 
+const AnimationState = {
+  NULL: 0,
+  READY: 1,
+  ENTERING: 2,
+  RESTING: 3,
+  LEAVING: 4,
+  GONE: 5,
+};
+
+function AnimationHandlerSample() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const [state, setState] = useState(AnimationState.NULL);
+
+  const timeoutManager = useRef(null);
+
+  const exists = state !== AnimationState.NULL;
+  const visible =
+    exists && state > AnimationState.RESTING && state <= AnimationState.RESTING;
+
+  useEffect(() => {
+    if (isVisible) {
+      if (state === AnimationState.NULL) {
+        setState(AnimationState.READY);
+      } else if (state > AnimationState.RESTING) {
+        setState(AnimationState.ENTERING);
+      }
+    } else if (!isVisible && state > AnimationState.NULL) {
+      if (state === AnimationState.READY) {
+        setState(AnimationState.NULL);
+      } else if (
+        state === AnimationState.ENTERING ||
+        state === AnimationState.RESTING
+      ) {
+        setState(AnimationState.LEAVING);
+      }
+    }
+  }, [isVisible, state]);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutManager.current) {
+      }
+    };
+  }, [state]);
+
+  return (
+    <article>
+      <h2>Animation Handler</h2>
+      <p>
+        Trying to have my own system to handle animations when elements enter
+        into view without external libraries.
+      </p>
+      <div>
+        <button type="button" onClick={() => setIsVisible((prev) => !prev)}>
+          Click here to display
+        </button>
+        <div style={{ height: 300, backgroundColor: "#faa" }}>
+          <div
+            style={{
+              overflow: "hidden",
+              ...(!isVisible && { display: "none" }),
+            }}
+          >
+            <div
+              style={{
+                border: "1px solid black",
+                padding: 8,
+                borderRadius: 4,
+                transition: `all 1000ms linear`,
+                transform: `translateY(${isVisible ? 0 : 100}%)`,
+                backgroundColor: "#fff",
+              }}
+            >
+              This thing gets visible with a cool animation
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export default function Lab(props) {
   return (
     <MainLayout>
       <p>Simple space for playing around with different features.</p>
+      <IntersectionDetectorSample />
       <PopperJSSample />
       <RelevantContentSample />
+      <AnimationHandlerSample />
     </MainLayout>
   );
 }
