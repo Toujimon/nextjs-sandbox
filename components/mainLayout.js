@@ -6,28 +6,28 @@ import {
   Tab,
   styled,
   Typography,
-  Avatar
+  Avatar,
 } from "@material-ui/core";
 import scStyled from "styled-components";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import ThemeTypeContext from "../src/themeTypeContext";
+import { ThemeTypeContext } from "../src/contexts";
 
 export const defaultTitle = "My Own Test Site";
 
 const StyledAppBar = styled(AppBar)({
-  flexDirection: "row"
+  flexDirection: "row",
 });
 
 const StyledAppBarTabs = styled(Tabs)({
   flex: "0 0 auto",
-  marginLeft: "auto"
+  marginLeft: "auto",
 });
 
 const StyledContainer = styled(Container)(({ theme }) => ({
   display: "grid",
   gridTemplateRows: "auto 1fr auto",
-  gap: theme.spacing(2)
+  gap: theme.spacing(2),
 }));
 
 const StyledTopBanner = styled(({ textColor, background, ...rest }) => (
@@ -42,12 +42,12 @@ const StyledTopBanner = styled(({ textColor, background, ...rest }) => (
   justifyContent: "center",
   padding: theme.spacing(3),
   textAlign: "center",
-  ...(textColor ? { color: textColor } : null)
+  ...(textColor ? { color: textColor } : null),
 }));
 
 const StyledAvatar = styled(Avatar)({
   width: 120,
-  height: 120
+  height: 120,
 });
 
 /* Using material UI all around. Let's add something from
@@ -66,7 +66,7 @@ const tabsValues = [
   ["/lab", "Lab"],
   ["/bgg-explorer", "BGG Explorer"],
   ["/advent-of-code", "Advent of Code"],
-  ["/something", "Something"]
+  ["/something", "Something"],
 ];
 
 function getTabValue(pathname) {
@@ -79,9 +79,10 @@ function getTabValue(pathname) {
 
 export default function MainLayout({ children, title = defaultTitle }) {
   const router = useRouter();
-  const tabValue = useMemo(() => getTabValue(router.pathname), [
-    router.pathname
-  ]);
+  const tabValue = useMemo(
+    () => getTabValue(router.pathname),
+    [router.pathname]
+  );
   const { type, setType } = useContext(ThemeTypeContext);
 
   return (

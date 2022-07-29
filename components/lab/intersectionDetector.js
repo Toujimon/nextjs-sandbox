@@ -11,9 +11,6 @@ export default function IntersectionDetectorSample() {
         ([entry]) => {
           if (entry) {
             setContentFits(entry.isIntersecting);
-            console.log(
-              `intersects: ${entry.isIntersecting} - ratio: ${entry.intersectionRatio}`
-            );
           }
         },
         {
@@ -33,7 +30,8 @@ export default function IntersectionDetectorSample() {
     <article>
       <h2>Intersection Detector</h2>
       <p>
-        Trying to detect when the content is overflowing its parent or not using the <b>IntersectionObserver API</b>.
+        Trying to detect when the content is overflowing its parent or not using
+        the <b>IntersectionObserver API</b>.
       </p>
       <div>
         <div

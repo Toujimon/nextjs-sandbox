@@ -3,7 +3,7 @@ import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { ThemeProvider as ScThemeProvider } from "styled-components";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import ThemeTypeContext from "../src/themeTypeContext";
+import { ThemeTypeContext } from "../src/contexts";
 import { lightTheme, darkTheme } from "../src/theme";
 
 /* Shamelessly stolen from the code given in
@@ -31,9 +31,9 @@ export default function MyApp(props) {
     return {
       contextValue: {
         type: themeType,
-        setType: (type) => setThemeType(type === "dark" ? "dark" : "light")
+        setType: (type) => setThemeType(type === "dark" ? "dark" : "light"),
       },
-      theme: themeType !== "dark" ? lightTheme : darkTheme
+      theme: themeType !== "dark" ? lightTheme : darkTheme,
     };
   }, [themeType]);
   const { theme } = themeTypeState;
