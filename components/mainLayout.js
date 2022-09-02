@@ -11,7 +11,6 @@ import {
 import scStyled from "styled-components";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import { ThemeTypeContext } from "../src/contexts";
 
 export const defaultTitle = "My Own Test Site";
 
@@ -64,8 +63,8 @@ const tabsValues = [
   [HOME_SUBPATH, "Home"],
   // ["/about", "About"],
   ["/lab", "Lab"],
+  ["/replay-cafe-app", "Replay Cafe App"],
   ["/bgg-explorer", "BGG Explorer"],
-  ["/advent-of-code", "Advent of Code"],
   ["/something", "Something"],
 ];
 
@@ -83,7 +82,6 @@ export default function MainLayout({ children, title = defaultTitle }) {
     () => getTabValue(router.pathname),
     [router.pathname]
   );
-  const { type, setType } = useContext(ThemeTypeContext);
 
   return (
     <>
@@ -113,29 +111,6 @@ export default function MainLayout({ children, title = defaultTitle }) {
           <ScStyledMain>{child}</ScStyledMain>
         ))}
       </StyledContainer>
-      <fieldset>
-        <legend>Theme:</legend>
-        <label>
-          <input
-            type="radio"
-            name="color"
-            value="light"
-            checked={type === "light"}
-            onChange={() => setType("light")}
-          />{" "}
-          Light
-        </label>{" "}
-        <label>
-          <input
-            type="radio"
-            name="color"
-            value="dark"
-            checked={type === "dark"}
-            onChange={() => setType("dark")}
-          />{" "}
-          Dark
-        </label>
-      </fieldset>
     </>
   );
 }

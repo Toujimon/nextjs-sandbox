@@ -16,38 +16,6 @@ export default function IndexPage() {
           </a>{" "}
           Sandbox just to understand how some stuff works.
         </p>
-        <p>
-          For starters, this project has{" "}
-          <b>
-            <a
-              href="https://emotion.sh/docs/introduction"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Emotion
-            </a>
-          </b>
-          {", "}
-          <b>
-            <a
-              href="https://styled-components.com/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Styled-Components
-            </a>
-          </b>{" "}
-          and&nbsp;
-          <b>
-            <a href="https://material-ui.com/" target="_blank" rel="noreferrer">
-              Material-UI
-            </a>
-          </b>{" "}
-          JSS Styling solutions working at once... Just for the kick of seeing
-          if they don't conflict TOO much.
-          <br />
-          Of course, they all are working server side.
-        </p>
       </div>
       <div>
         I'm kind of liking the idea of the "out of the box" routing and the

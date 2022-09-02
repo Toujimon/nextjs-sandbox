@@ -3,8 +3,7 @@ import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { ThemeProvider as ScThemeProvider } from "styled-components";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { ThemeTypeContext } from "../src/contexts";
-import { lightTheme, darkTheme } from "../src/theme";
+import { lightTheme as theme } from "../src/theme";
 
 /* Shamelessly stolen from the code given in
 https://github.com/mui-org/material-ui/tree/master/examples/nextjs
@@ -26,20 +25,9 @@ export default function MyApp(props) {
     removed. It seems styled-components will now what to do with it */
   }, []);
 
-  const [themeType, setThemeType] = useState("light");
-  const themeTypeState = useMemo(() => {
-    return {
-      contextValue: {
-        type: themeType,
-        setType: (type) => setThemeType(type === "dark" ? "dark" : "light"),
-      },
-      theme: themeType !== "dark" ? lightTheme : darkTheme,
-    };
-  }, [themeType]);
-  const { theme } = themeTypeState;
-
   return (
     <React.Fragment>
+      <CssBaseline />
       <Head>
         <title key="title">
           My OWN page: This title should be overriden by any other given by the
@@ -54,11 +42,8 @@ export default function MyApp(props) {
       </Head>
       <ThemeProvider theme={theme}>
         <ScThemeProvider theme={theme}>
-          <ThemeTypeContext.Provider value={themeTypeState.contextValue}>
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline />
-            <Component {...pageProps} />
-          </ThemeTypeContext.Provider>
+          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <Component {...pageProps} />
         </ScThemeProvider>
       </ThemeProvider>
     </React.Fragment>
