@@ -12,7 +12,7 @@ export default function Lab(props) {
   const [samples, setSamples] = useState([]);
 
   useEffect(() => {
-    async function loadSampleComponents() {
+    (async () => {
       try {
         const sampleModules = await Promise.all(
           labSamples.map((name) => import(`../components/lab/${name}.js`))
@@ -22,8 +22,7 @@ export default function Lab(props) {
         console.error(e);
         setSamples([]);
       }
-    }
-    loadSampleComponents();
+    })();
   }, []);
 
   return (
