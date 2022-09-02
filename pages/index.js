@@ -1,9 +1,10 @@
+import { ContentBox } from "../components/commonStyledElements";
 import MainLayout from "../components/mainLayout";
 
 export default function IndexPage() {
   return (
     <MainLayout>
-      <div>
+      <ContentBox>
         Hello World.
         <p>
           My{" "}
@@ -16,14 +17,14 @@ export default function IndexPage() {
           </a>{" "}
           Sandbox just to understand how some stuff works.
         </p>
-      </div>
-      <div>
+      </ContentBox>
+      <ContentBox>
         I'm kind of liking the idea of the "out of the box" routing and the
         separation in "pages" (all of this is part of NextJs Framework), but I'm
         not loving how I need to either wrap the whole app on a layout
         component, or keep wrapping the content of each page on its own layout
         (many times the same one).
-      </div>
+      </ContentBox>
     </MainLayout>
   );
 }

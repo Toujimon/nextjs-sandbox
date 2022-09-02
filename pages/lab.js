@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ContentBox } from "../components/commonStyledElements";
 import MainLayout from "../components/mainLayout";
 
 const labSamples = [
@@ -32,7 +33,9 @@ export default function Lab(props) {
         here have been loaded dynamically.
       </p>
       {samples.map((Sample, index) => (
-        <Sample />
+        <ContentBox>
+          <Sample />
+        </ContentBox>
       ))}
     </MainLayout>
   );

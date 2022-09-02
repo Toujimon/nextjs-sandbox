@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { ContentBox } from "../components/commonStyledElements";
 import MainLayout from "../components/mainLayout";
 
 export default function ReplayCafeApp(props) {
@@ -9,7 +10,7 @@ export default function ReplayCafeApp(props) {
 
   return (
     <MainLayout>
-      <div>Replay cafe stuff</div>
+      <ContentBox>Replay cafe stuff</ContentBox>
     </MainLayout>
   );
 }

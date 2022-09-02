@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { ContentBox } from "../components/commonStyledElements";
 import MainLayout from "../components/mainLayout";
 
 export default function BggExplorer(props) {
@@ -39,8 +40,7 @@ export default function BggExplorer(props) {
   };
   return (
     <MainLayout>
-      <div>So, let's do things here</div>
-      <div>
+      <ContentBox>
         <h3>Search</h3>
         <form onSubmit={handleSearch}>
           <input
@@ -74,7 +74,7 @@ export default function BggExplorer(props) {
         ) : (
           <p>Searching...</p>
         )}
-      </div>
+      </ContentBox>
     </MainLayout>
   );
 }

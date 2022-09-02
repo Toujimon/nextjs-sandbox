@@ -8,7 +8,6 @@ import {
   Typography,
   Avatar,
 } from "@material-ui/core";
-import scStyled from "styled-components";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
@@ -49,19 +48,9 @@ const StyledAvatar = styled(Avatar)({
   height: 120,
 });
 
-/* Using material UI all around. Let's add something from
-Styled Components */
-const ScStyledMain = scStyled.main`
-  margin-top: 8px;
-  padding: 8px;
-  border: 1px solid black;
-  box-shadow: 10px 5px 5px ${({ theme }) => theme.palette.primary.main}
-`;
-
 const HOME_SUBPATH = "/";
 const tabsValues = [
   [HOME_SUBPATH, "Home"],
-  // ["/about", "About"],
   ["/lab", "Lab"],
   ["/replay-cafe-app", "Replay Cafe App"],
   ["/bgg-explorer", "BGG Explorer"],
@@ -106,11 +95,7 @@ export default function MainLayout({ children, title = defaultTitle }) {
           <StyledAvatar src="/home-avatar.jpg" />
         </StyledTopBanner>
       )}
-      <StyledContainer>
-        {React.Children.map(children, (child) => (
-          <ScStyledMain>{child}</ScStyledMain>
-        ))}
-      </StyledContainer>
+      <StyledContainer>{children}</StyledContainer>
     </>
   );
 }
