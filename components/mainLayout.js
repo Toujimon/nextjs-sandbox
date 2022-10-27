@@ -22,39 +22,27 @@ const StyledAppBarTabs = styled(Tabs)({
   marginLeft: "auto",
 });
 
-const StyledContainer = styled(Container)(({ theme }) => ({
-  display: "grid",
-  gridTemplateRows: "auto 1fr auto",
-  gap: theme.spacing(2),
-}));
-
-const StyledTopBanner = styled(({ textColor, background, ...rest }) => (
-  <div {...rest} />
-))(({ theme, background, textColor }) => ({
-  ...(background
-    ? { backgroundImage: `url(${background})`, backgroundSize: "cover" }
-    : { backgroundColor: "transparent" }),
+const StyledContainer = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: theme.spacing(3),
-  textAlign: "center",
-  ...(textColor ? { color: textColor } : null),
+  gap: theme.spacing(2),
+  paddingLeft: "24px",
+  paddingRight: "24px",
+  "@media all and (min-width: 800px)": {
+    paddingLeft: "72px",
+    paddingRight: "72px",
+  },
+  "@media all and (min-width: 1200px)": {
+    paddingLeft: "144px",
+    paddingRight: "144px",
+  },
 }));
-
-const StyledAvatar = styled(Avatar)({
-  width: 120,
-  height: 120,
-});
 
 const HOME_SUBPATH = "/";
 const tabsValues = [
   [HOME_SUBPATH, "Home"],
+  ["/resume", "Resume"],
   ["/lab", "Lab"],
-  ["/replay-cafe-app", "Replay Cafe App"],
-  ["/bgg-explorer", "BGG Explorer"],
-  ["/something", "Something"],
 ];
 
 function getTabValue(pathname) {
@@ -65,7 +53,11 @@ function getTabValue(pathname) {
   return tabsValues.find(([x]) => x === subPath)?.[0] ?? false;
 }
 
-export default function MainLayout({ children, title = defaultTitle }) {
+export default function MainLayout({
+  children,
+  title = defaultTitle,
+  headerContent,
+}) {
   const router = useRouter();
   const tabValue = useMemo(
     () => getTabValue(router.pathname),
@@ -87,14 +79,7 @@ export default function MainLayout({ children, title = defaultTitle }) {
           ))}
         </StyledAppBarTabs>
       </StyledAppBar>
-      {tabValue === tabsValues[0][0] && (
-        <StyledTopBanner background="/home-banner.jpg" textColor="white">
-          <Typography gutterBottom variant="h3">
-            Gonzalo Arrivi's Sandbox
-          </Typography>
-          <StyledAvatar src="/home-avatar.jpg" />
-        </StyledTopBanner>
-      )}
+      {headerContent}
       <StyledContainer>{children}</StyledContainer>
     </>
   );

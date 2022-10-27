@@ -1,9 +1,43 @@
+import {
+  styled,
+  Typography,
+  Avatar,
+} from "@material-ui/core";
 import { ContentBox } from "../components/commonStyledElements";
 import MainLayout from "../components/mainLayout";
 
+const StyledTopBanner = styled(({ textColor, background, ...rest }) => (
+  <div {...rest} />
+))(({ theme, background, textColor }) => ({
+  ...(background
+    ? { backgroundImage: `url(${background})`, backgroundSize: "cover" }
+    : { backgroundColor: "transparent" }),
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: theme.spacing(3),
+  textAlign: "center",
+  ...(textColor ? { color: textColor } : null),
+}));
+
+const StyledAvatar = styled(Avatar)({
+  width: 120,
+  height: 120,
+});
+
 export default function IndexPage() {
   return (
-    <MainLayout>
+    <MainLayout
+      headerContent={
+        <StyledTopBanner background="/home-banner.jpg" textColor="white">
+          <Typography gutterBottom variant="h3">
+            Gonzalo Arrivi's Sandbox
+          </Typography>
+          <StyledAvatar src="/home-avatar.jpg" />
+        </StyledTopBanner>
+      }
+    >
       <ContentBox>
         Hello World.
         <p>
