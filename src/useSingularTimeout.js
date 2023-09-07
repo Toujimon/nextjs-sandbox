@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export function getSingularTimeout() {
   let timeout = null;
@@ -34,10 +34,10 @@ export function getSingularTimeout() {
  * Hook to make use of
  */
 function useSingularTimeout() {
-  const setAndClear = useMemo(() => {
+  const [setAndClear] = useState(() => {
     const singularTimeout = getSingularTimeout();
     return [singularTimeout.set, singularTimeout.clear];
-  }, []);
+  });
 
   // Ensures the timeout is cleared when the component using it unmounts
   useEffect(

@@ -8,6 +8,7 @@ const labSamples = [
   "intersectionDetector",
   "timeoutTester",
   "dynamicImageLoading",
+  "numberAnimation"
 ];
 
 export default function Lab(props) {
