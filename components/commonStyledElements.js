@@ -1,6 +1,6 @@
-import { styled } from "@material-ui/core";
+import styled from "styled-components";
 
-export const ContentBox = styled("div")(({ theme }) => ({
+export const ContentBox = styled.div(({ theme }) => ({
   marginTop: "8px",
   padding: "16px",
   border: "1px solid rgba(0,0,0,0.5)",
