@@ -1,8 +1,5 @@
 import React from "react";
 import Head from "next/head";
-import { ThemeProvider as ScThemeProvider } from "styled-components";
-import theme from "../src/theme";
-
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
@@ -18,7 +15,7 @@ export default function MyApp(props) {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
-        <meta name="theme-color" content={theme.palette.primary.main} />
+        <meta name="theme-color" content="#1976d2" />
         <style>{`
           @font-face {
             font-family: "Roboto";
@@ -30,9 +27,7 @@ export default function MyApp(props) {
           }
         `}</style>
       </Head>
-      <ScThemeProvider theme={theme}>
-        <Component {...pageProps} />
-      </ScThemeProvider>
+      <Component {...pageProps} />
     </React.Fragment>
   );
 }

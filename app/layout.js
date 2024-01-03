@@ -1,3 +1,5 @@
+import StyledComponentsRegistry from "./StyledComponentsRegistry";
+
 export default function RootLayout({
     // Layouts must accept a children prop.
     // This will be populated with nested layouts or pages
@@ -5,7 +7,14 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body>{children}</body>
+            <head>
+                <link rel="stylesheet" href="/global.css" />
+            </head>
+            <body>
+                <StyledComponentsRegistry>
+                    {children}
+                </StyledComponentsRegistry>
+            </body>
         </html>
     )
 }
