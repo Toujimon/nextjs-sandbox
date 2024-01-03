@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
-import scStyled from "styled-components";
+import styled from "styled-components";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
 export const defaultTitle = "My Own Test Site";
 
-const StyledAppBar = scStyled.header({
+const StyledAppBar = styled.header({
   position: "sticky",
   top: 0,
   right: 0,
@@ -19,14 +19,14 @@ const StyledAppBar = scStyled.header({
     "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
 });
 
-const StyledAppBarTabs = scStyled.div({
+const StyledAppBarTabs = styled.div({
   flex: "0 0 auto",
   marginLeft: "auto",
   display: "flex",
   minHeight: "48px",
 });
 
-const Tab = scStyled.button((props) => ({
+const Tab = styled.button((props) => ({
   fontSize: "0.875rem",
   textAlign: "center",
   fontFamily: "Roboto, Helvetica, Arial. sans-serif",
@@ -47,10 +47,10 @@ const Tab = scStyled.button((props) => ({
   }),
 }));
 
-const StyledContainer = scStyled.div(({ theme }) => ({
+const StyledContainer = styled.div({
   display: "flex",
   flexDirection: "column",
-  gap: theme.spacing(2),
+  gap: "16px",
   paddingLeft: "24px",
   paddingRight: "24px",
   "@media all and (min-width: 800px)": {
@@ -61,7 +61,7 @@ const StyledContainer = scStyled.div(({ theme }) => ({
     paddingLeft: "144px",
     paddingRight: "144px",
   },
-}));
+});
 
 const HOME_SUBPATH = "/";
 const tabsValues = [
@@ -95,12 +95,10 @@ export default function MainLayout({
         <title key="title">{title}</title>
       </Head>
       <StyledAppBar position="sticky">
-        <StyledAppBarTabs
-          value={tabValue}
-          onChange={(e, newValue) => router.push(newValue)}
-        >
+        <StyledAppBarTabs>
           {tabsValues.map(([value, label]) => (
             <Tab
+              key={value}
               type="button"
               disabled={value === tabValue}
               active={value === tabValue}

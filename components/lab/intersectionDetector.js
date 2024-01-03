@@ -1,4 +1,78 @@
 import React, { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
+
+const StyledContainer = styled.div`
+  width: 100%;
+  border: 1px solid black;
+  display: grid;
+  grid-template: 64px / 250px 1fr;
+  position: relative;
+  gap: 8px;
+  & > * {
+    box-sizing: border-box;
+    border: 1px solid red;
+  }
+`;
+
+const StyledObservedContainer = styled.div`
+position: relative;
+& > * {
+  box-sizing: border-box;
+  border: 1px solid orange;
+}
+`;
+
+const StyledDisappearingBlock = styled.div`
+position: absolute;
+top: 0;
+right: 0;
+bottom: 0;
+display: ${({ contentFits }) => contentFits ? "none" : "block"};
+`;
+
+const StyledMenuContainer = styled.div`
+position: absolute;
+height: 100%;
+width: 100%;
+display: grid;
+grid-template: 100% / 1fr auto;
+gap: 8px;
+& > * {
+  box-sizing: border-box;
+  border: 1px solid green;
+}
+`;
+
+const StyledMenu = styled.div`
+visibility: ${({ contentFits }) => contentFits ? "visible" : "hidden"};
+justify-self: center;
+height: 100%;
+display: grid;
+grid-template-rows: 1fr;
+grid-auto-flow: column;
+grid-auto-columns: min-content;
+gap: 8px;
+& > * {
+  box-sizing: border-box;
+  border: 1px solid blue;
+}
+`;
+
+const StyledFixedContent = styled.div`
+visibility: ${({ contentFits }) => contentFits ? "visible" : "hidden"};
+white-space: nowrap;
+position: relative;
+&:hover::after {
+  content: "Something";
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+`;
+
+const StyledMenuItem = styled.div`
+white-space: nowrap;
+`;
 
 export default function IntersectionDetectorSample() {
   const [contentFits, setContentFits] = useState(true);
@@ -34,103 +108,38 @@ export default function IntersectionDetectorSample() {
         the <b>IntersectionObserver API</b>.
       </p>
       <div>
-        <div
-          css={`
-            width: 100%;
-            border: 1px solid black;
-            display: grid;
-            grid-template: 64px / 250px 1fr;
-            position: relative;
-            gap: 8px;
-            & > * {
-              box-sizing: border-box;
-              border: 1px solid red;
-            }
-          `}
-        >
+        <StyledContainer>
           <div>Fixed part</div>
-          <div
-            css={`
-              position: relative;
-              & > * {
-                box-sizing: border-box;
-                border: 1px solid orange;
-              }
-            `}
-          >
-            <div
+          <StyledObservedContainer>
+            <StyledMenuContainer
               ref={containerRef}
-              css={`
-                position: absolute;
-                height: 100%;
-                width: 100%;
-                display: grid;
-                grid-template: 100% / 1fr auto;
-                gap: 8px;
-                & > * {
-                  box-sizing: border-box;
-                  border: 1px solid green;
-                }
-              `}
             >
-              <div
-                css={`
-                  visibility: ${contentFits ? "visible" : "hidden"};
-                  justify-self: center;
-                  height: 100%;
-                  display: grid;
-                  grid-template-rows: 1fr;
-                  grid-auto-flow: column;
-                  grid-auto-columns: min-content;
-                  gap: 8px;
-                  & > * {
-                    box-sizing: border-box;
-                    border: 1px solid blue;
-                  }
-                `}
+              <StyledMenu
+                contentFits={contentFits}
               >
                 {Array.from({ length: 5 }).map((_, index) => (
-                  <div
+                  <StyledMenuItem
                     key={index}
-                    css={`
-                      white-space: nowrap;
-                    `}
                   >
                     Item #{index + 1}
-                  </div>
+                  </StyledMenuItem>
                 ))}
-              </div>
-              <div
+              </StyledMenu>
+              <StyledFixedContent
                 ref={targetRef}
-                css={`
-                  visibility: ${contentFits ? "visible" : "hidden"};
-                  white-space: nowrap;
-                  position: relative;
-                  &:hover::after {
-                    content: "Something";
-                    position: absolute;
-                    top: 100%;
-                    left: 0;
-                  }
-                `}
+                contentFits={contentFits}
               >
                 Some other fixed content
-              </div>
-            </div>
-          </div>
-          <div
-            css={`
-              position: absolute;
-              top: 0;
-              right: 0;
-              bottom: 0;
-              display: ${contentFits ? "none" : "block"};
-            `}
+              </StyledFixedContent>
+            </StyledMenuContainer>
+          </StyledObservedContainer>
+          <StyledDisappearingBlock
+            contentFits={contentFits}
           >
             Shows if main content doesn't fit
-          </div>
-        </div>
+          </StyledDisappearingBlock>
+        </StyledContainer>
       </div>
-    </article>
+    </article >
   );
 }

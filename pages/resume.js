@@ -97,7 +97,7 @@ const content = (
         <span>Typescript (v4+)</span>
       </li>
       <li>
-        <span>React (v16+)</span>
+        <span>React (v18+)</span>
       </li>
       <li>
         <span>MaterialUI theming</span>
@@ -106,10 +106,10 @@ const content = (
         <span>Emotion Jss styling</span>
       </li>
       <li>
-        <span>NodeJS (v14+)</span>
+        <span>NodeJS (v18+)</span>
       </li>
       <li>
-        <span>NextJS (v11+)</span>
+        <span>NextJS (v13+)</span>
       </li>
       <li>
         <span>
