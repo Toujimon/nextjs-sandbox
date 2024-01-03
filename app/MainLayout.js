@@ -46,22 +46,6 @@ const Tab = styled(({ active, ...rest }) => <button  {...rest} />)((props) => ({
   }),
 }));
 
-const StyledContainer = styled.div({
-  display: "flex",
-  flexDirection: "column",
-  gap: "16px",
-  paddingLeft: "24px",
-  paddingRight: "24px",
-  "@media all and (min-width: 800px)": {
-    paddingLeft: "72px",
-    paddingRight: "72px",
-  },
-  "@media all and (min-width: 1200px)": {
-    paddingLeft: "144px",
-    paddingRight: "144px",
-  },
-});
-
 const HOME_SUBPATH = "/";
 const tabsValues = [
   [HOME_SUBPATH, "Home"],
@@ -79,7 +63,6 @@ function getTabValue(pathname) {
 
 export default function MainLayout({
   children,
-  headerContent,
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -105,8 +88,7 @@ export default function MainLayout({
           ))}
         </StyledAppBarTabs>
       </StyledAppBar>
-      {headerContent}
-      <StyledContainer>{children}</StyledContainer>
+      {children}
     </>
   );
 }

@@ -1,4 +1,5 @@
 import StyledComponentsRegistry from "./StyledComponentsRegistry";
+import MainLayout from "./MainLayout";
 
 export default function RootLayout({
     // Layouts must accept a children prop.
@@ -12,7 +13,9 @@ export default function RootLayout({
             </head>
             <body>
                 <StyledComponentsRegistry>
-                    {children}
+                    <MainLayout>
+                        {children}
+                    </MainLayout>
                 </StyledComponentsRegistry>
             </body>
         </html>

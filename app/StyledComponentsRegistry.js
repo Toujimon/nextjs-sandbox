@@ -2,7 +2,11 @@
 
 import React, { useState } from 'react'
 import { useServerInsertedHTML } from 'next/navigation'
-import { ServerStyleSheet, StyleSheetManager } from 'styled-components'
+import { ServerStyleSheet, StyleSheetManager, ThemeProvider } from 'styled-components'
+
+const theme = {
+    primary: "#1976d2"
+}
 
 /*
     Shamelessly stolen from: https://nextjs.org/docs/app/building-your-application/styling/css-in-js#styled-components
@@ -22,7 +26,9 @@ export default function StyledComponentsRegistry({ children }) {
 
     return (
         <StyleSheetManager sheet={styledComponentsStyleSheet.instance}>
-            {children}
+            <ThemeProvider theme={theme}>
+                {children}
+            </ThemeProvider>
         </StyleSheetManager>
     )
 }
