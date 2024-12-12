@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ContentBox, StyledPageContainer } from "../../components/commonStyledElements";
 
 const labSamples = [
+    "animatedContentTester",
     "popperJs",
     "relevantContent",
     "intersectionDetector",
@@ -37,7 +38,7 @@ export default function Lab() {
             </p>
             {samples.map((Sample, index) => (
                 <ContentBox>
-                    <Sample />
+                    <Sample key={index}/>
                 </ContentBox>
             ))}
         </StyledPageContainer>

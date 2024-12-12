@@ -27,7 +27,7 @@ position: absolute;
 top: 0;
 right: 0;
 bottom: 0;
-display: ${({ contentFits }) => contentFits ? "none" : "block"};
+display: ${({ $contentFits }) => $contentFits ? "none" : "block"};
 `;
 
 const StyledMenuContainer = styled.div`
@@ -44,7 +44,7 @@ gap: 8px;
 `;
 
 const StyledMenu = styled.div`
-visibility: ${({ contentFits }) => contentFits ? "visible" : "hidden"};
+visibility: ${({ $contentFits }) => $contentFits ? "visible" : "hidden"};
 justify-self: center;
 height: 100%;
 display: grid;
@@ -59,7 +59,7 @@ gap: 8px;
 `;
 
 const StyledFixedContent = styled.div`
-visibility: ${({ contentFits }) => contentFits ? "visible" : "hidden"};
+visibility: ${({ $contentFits }) => $contentFits ? "visible" : "hidden"};
 white-space: nowrap;
 position: relative;
 &:hover::after {
@@ -115,7 +115,7 @@ export default function IntersectionDetectorSample() {
               ref={containerRef}
             >
               <StyledMenu
-                contentFits={contentFits}
+                $contentFits={contentFits}
               >
                 {Array.from({ length: 5 }).map((_, index) => (
                   <StyledMenuItem
@@ -127,14 +127,14 @@ export default function IntersectionDetectorSample() {
               </StyledMenu>
               <StyledFixedContent
                 ref={targetRef}
-                contentFits={contentFits}
+                $contentFits={contentFits}
               >
                 Some other fixed content
               </StyledFixedContent>
             </StyledMenuContainer>
           </StyledObservedContainer>
           <StyledDisappearingBlock
-            contentFits={contentFits}
+            $contentFits={contentFits}
           >
             Shows if main content doesn't fit
           </StyledDisappearingBlock>
