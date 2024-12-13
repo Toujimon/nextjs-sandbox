@@ -12,6 +12,8 @@ const TRANSITIONING_STATUSES = [STATUS.CONCEALING, STATUS.REVEALING];
 
 const DEFAULT_TRANSITION_MILLISECONDS = 300;
 
+const MIN_VISIBLE_PIXELS_HEIGHT = 3;
+
 function getVisibleHeight(element) {
   if (!element || !element.firstElementChild) {
     return 0;
@@ -22,7 +24,7 @@ function getVisibleHeight(element) {
   return (Math.floor(childElement.getBoundingClientRect().top - element.getBoundingClientRect().top) + (childElement.scrollHeight));
 }
 
-function getStyleByStatus(status, element, transitionMilliseconds = 0) {
+function getStyleByStatus(status, visibleHeight = 0, transitionMilliseconds = 0) {
   if (status === STATUS.REVEALED) {
     return {};
   }
@@ -36,21 +38,18 @@ function getStyleByStatus(status, element, transitionMilliseconds = 0) {
     ...(transitionMilliseconds ? {
       transition: `all ${transitionMilliseconds}ms ease-in-out`,
     } : {}),
-    height: status === STATUS.CONCEALING ? 1 : Math.max(getVisibleHeight(element) - 1, 2)
+    height: status === STATUS.CONCEALING ? 1 : visibleHeight >= MIN_VISIBLE_PIXELS_HEIGHT ? visibleHeight - 1 : MIN_VISIBLE_PIXELS_HEIGHT
   }
 }
 
-function getTransitioningStatusMilliseconds(status, concealMilliseconds, revealMilliseconds) {
-  if (status === STATUS.REVEALING) {
-    return revealMilliseconds;
-  }
-  if (status === STATUS.CONCEALING) {
-    return concealMilliseconds;
-  }
-  return 0;
-}
 
-function getNextStatus(status, hidden) {
+function getNextStatus(status, hidden, visibleHeight, transitionMilliseconds) {
+
+  // There are two edge cases where the state will go directly to stationary
+  if (transitionMilliseconds <= 0 || (status !== STATUS.CONCEALED && visibleHeight < MIN_VISIBLE_PIXELS_HEIGHT)) {
+    return hidden ? STATUS.CONCEALED : STATUS.REVEALED;
+  }
+
   switch (status) {
     case STATUS.CONCEALED:
       return hidden ? status : STATUS.CONCEALING;
@@ -74,39 +73,33 @@ const AnimatedConcealableContent = ({
   const instanceDataRef = useRef({
     status: hiddenProp ? STATUS.CONCEALED : STATUS.REVEALED,
     hidden: hiddenProp,
-    updateVisibilityStatus: null,
-    resizeObserver: null,
-    handleTransitionEnd: null,
     concealMilliseconds: 0,
     revealMilliseconds: 0,
+    resizeObserver: null,
+    handleTransitionEnd: null,
+    refreshStatus: null,
   })
 
   const [style, setStyle] = useState(() => getStyleByStatus(instanceDataRef.current.status));
 
   useEffect(() => {
     instanceDataRef.current.handleTransitionEnd = () => {
-      const { calculateNewVisibilityStatus } = instanceDataRef.current;
-      calculateNewVisibilityStatus?.();
+      const { refreshStatus } = instanceDataRef.current;
+      refreshStatus?.();
     };
 
     instanceDataRef.current.resizeObserver = new ResizeObserver((entries) => {
-      const { calculateNewVisibilityStatus } = instanceDataRef.current;
+      const { refreshStatus } = instanceDataRef.current;
       const [entry] = entries;
-      const currentHeight = entry.contentRect.height;
-      // It will only trigger when the height is not 0 or the "visible" height, as the transitioning states always have a different heigth so it can be detected
-      if (currentHeight !== 0 && currentHeight !== getVisibleHeight(entry.target)) {
-        calculateNewVisibilityStatus?.();
+
+      // It will only refresh the status when the "height" style has a value, so it means the explicit styling is already applied
+      if (entry.target.style.height) {
+        refreshStatus?.();
       }
     });
 
-    instanceDataRef.current.calculateNewVisibilityStatus = () => {
+    instanceDataRef.current.refreshStatus = () => {
       const { status, hidden, handleTransitionEnd, resizeObserver, concealMilliseconds, revealMilliseconds } = instanceDataRef.current;
-
-      // The next state is calculated. If it wouldn't change, the process stops.
-      const nextStatus = getNextStatus(status, hidden);
-      if (nextStatus === status) {
-        return;
-      }
 
       // Current event handlers and observers are cleared
       if (handleTransitionEnd) {
@@ -115,25 +108,38 @@ const AnimatedConcealableContent = ({
 
       resizeObserver?.disconnect();
 
-      // Some decisions will be taken depending if the current and next states are "transitioning"
+
+      // The next state is calculated. If it wouldn't change, the process stops.
+      const visibleHeight = getVisibleHeight(wrapperRef.current);
+
+      const transitionMilliseconds = hidden ? concealMilliseconds : revealMilliseconds;
+
+      const nextStatus = getNextStatus(status, hidden, visibleHeight, transitionMilliseconds);
+
+      console.log(`debug::refresh-status:init`, { status, nextStatus, visibleHeight, transitionMilliseconds });
+
+      if (nextStatus === status) {
+        return;
+      }
+
+      // Some decisions will be taken depending if the current and/or next states are "transitioning" ones 
       const currentIsTransitioningStatus = TRANSITIONING_STATUSES.includes(status);
       const nextIsTransitioningStatus = TRANSITIONING_STATUSES.includes(nextStatus);
 
-      /* If it goes from an stationary state to a transitioning one, the observer is activated. As it will be needed
+      /* If it goes from a "final" state to a "transitioning" one, the observer is activated. As it will be needed
         to react to the first change in explicit height before initiating the transition animation */
       if (!currentIsTransitioningStatus && nextIsTransitioningStatus) {
         resizeObserver?.observe(wrapperRef.current);
       }
 
       /* If it goes from a transitioning state to the next, there will be an animation delay. It is needed to be known
-      so an event listener is added and the next state can be triggered */
+      so an event listener is added and the next state can be triggered when it finishes */
       const nextStatusHasAnimation = currentIsTransitioningStatus && nextIsTransitioningStatus;
 
       setStyle(getStyleByStatus(
         nextStatus,
-        wrapperRef.current,
-        nextStatusHasAnimation ?
-          getTransitioningStatusMilliseconds(nextStatus, concealMilliseconds, revealMilliseconds) : null));
+        visibleHeight,
+        nextStatusHasAnimation ? transitionMilliseconds : 0));
 
       if (nextStatusHasAnimation) {
         wrapperRef.current?.addEventListener('transitionend', handleTransitionEnd);
@@ -151,13 +157,13 @@ const AnimatedConcealableContent = ({
   useEffect(() => {
     // When the "hidden" property changes, the instance data gets in sync and a new visibility status may need to be calculated
     instanceDataRef.current.hidden = hiddenProp;
-    instanceDataRef.current.calculateNewVisibilityStatus?.();
+    instanceDataRef.current.refreshStatus?.();
   }, [hiddenProp]);
 
   useEffect(() => {
-    // Every time milliseconds props change, it updates the instance data so they are in sync
-    instanceDataRef.current.concealMilliseconds = Math.max(1, concealMillisecondsProp ?? transitionMillisecondsProp ?? DEFAULT_TRANSITION_MILLISECONDS);
-    instanceDataRef.current.revealMilliseconds = Math.max(1, revealMillisecondsProp ?? transitionMillisecondsProp ?? DEFAULT_TRANSITION_MILLISECONDS);
+    // Every time milliseconds props change, it updates the instance data values so they are in sync
+    instanceDataRef.current.concealMilliseconds = Math.max(0, concealMillisecondsProp ?? transitionMillisecondsProp ?? DEFAULT_TRANSITION_MILLISECONDS);
+    instanceDataRef.current.revealMilliseconds = Math.max(0, revealMillisecondsProp ?? transitionMillisecondsProp ?? DEFAULT_TRANSITION_MILLISECONDS);
   }, [transitionMillisecondsProp, concealMillisecondsProp, revealMillisecondsProp]);
 
   return <div ref={wrapperRef} style={style}>
