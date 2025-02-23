@@ -1,19 +1,19 @@
 import { useState } from "react";
-import MyTooltip, { useMyTooltip } from "../myTooltip";
+import { useFloating } from '@floating-ui/react';
 
 export default function PopperJSSample() {
   const [tooltipState, setTooltipState] = useState(null);
   const isTooltipVisible = tooltipState != null;
+  const { refs, floatingStyles } = useFloating();
 
-  const { referenceRef, tooltipData } = useMyTooltip();
   return (
     <article>
-      <h2>Popper.js (React)</h2>
+      <h2>Floating UI</h2>
       <p>
         The simplest approach of using{" "}
         <a
-          ref={tooltipState === 0 ? referenceRef : null}
-          href="https://popper.js.org/react-popper/"
+          ref={tooltipState === 0 ? refs.setReference : null}
+          href="https://floating-ui.com/docs/getting-started"
           target="_blank"
           rel="noreferrer"
         >
@@ -22,7 +22,7 @@ export default function PopperJSSample() {
         .
         {isTooltipVisible && (
           <button
-            ref={tooltipState === 1 ? referenceRef : null}
+            ref={tooltipState === 1 ? refs.setReference : null}
             onClick={() => setTooltipState((prev) => (prev + 1) % 2)}
             type="button"
           >
@@ -39,13 +39,16 @@ export default function PopperJSSample() {
         </button>
       </div>
       {isTooltipVisible && (
-        <MyTooltip tooltipData={tooltipData}>
+        <div ref={refs.setFloating} style={{
+          backgroundColor: "white",
+          border: "1px solid black",
+          padding: "8px",
+          boxSizing: "border-box",
+          ...floatingStyles
+        }}>
           <span> A cool library to handle overlay elements</span>:
-          <pre>styles: {JSON.stringify(tooltipData.styles, null, 2)}</pre>
-          <pre>
-            attributes: {JSON.stringify(tooltipData.attributes, null, 2)}
-          </pre>
-        </MyTooltip>
+          <pre>styles: {JSON.stringify(floatingStyles, null, 2)}</pre>
+        </div>
       )}
     </article>
   );

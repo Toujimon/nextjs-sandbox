@@ -5,7 +5,7 @@ import { ContentBox, StyledPageContainer } from "../../components/commonStyledEl
 
 const labSamples = [
     "animatedContentTester",
-    "popperJs",
+    "floatingUi",
     "relevantContent",
     "intersectionDetector",
     "timeoutTester",
