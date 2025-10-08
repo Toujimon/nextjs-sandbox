@@ -1,27 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { AnimatedConcealableContent } from "./AnimatedConcealableContent";
 
-const STATUS = {
-    NEW: "NEW",
-    ENTERING: "ENTERING",
-    STABLE: "STABLE",
-    LEAVING: "LEAVING",
-    GONE: "GONE"
-}
 
 export const AnimatedContainer = ({ items: itemsProp, renderItem, getKeyFromItem }) => {
 
-    // const [items, setItems] = useState(() => {
-    //     return itemsProp.map(item => ({ item, status: STATUS.STABLE, key: getKeyFromItem(item) }));
-    // });
+    const wrapperRef = useRef(null);
 
-    // useEffect(()=>{
-    //     let i = 0,j = 0;
-    //     for(i = 0;i<itemsProp.length)
+    const [list, setList] = useState(() => {
+        return itemsProp.map(item => ({ item, hidden: false, key: getKeyFromItem(item) }));
+    });
 
-    // }, [itemsProp]);
+    // const manager = useMemo(() => ({ newItems: new Set(), keyIndexMap: list.reduce((acc, item, index) => ({ ...acc, [item.key]: index }), {}) }), []);
 
-    return <div>
+    // useEffect(() => {
+    //     const keySet = new Set(Object.keys(manager.keyIndexMap));
+    //     const newItems = {}; 
+    //     items.forEach((item) => {
+    //         const key = getKeyFromItem(item);
 
+    //     })
+    // }, [items])
+
+    return <div ref={wrapperRef}>
+        {list.map(({ item, hidden, key }, index) => <AnimatedConcealableContent key={key} hidden={hidden}>
+            <div data-animated-key={key}>{renderItem(item, index)}</div>
+        </AnimatedConcealableContent>)}
     </div>
-
 }
