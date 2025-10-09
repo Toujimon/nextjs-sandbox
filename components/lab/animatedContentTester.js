@@ -3,7 +3,7 @@ import { AnimatedConcealableContent } from "../../src/AnimatedConcealableContent
 import { AnimatedContainer } from "../../src/AnimatedContainer";
 
 export default function AnimatedContentTested() {
-  const [hidden, setHidden] = useState(false);
+  const [hidden, setHidden] = useState(true);
   const [transitionMilliseconds, setTransitionMilliseconds] = useState(300);
   const [animatedItemsAmount, setAnimatedItemsAmount] = useState(5);
   const animatedItems = useMemo(() => {
@@ -11,7 +11,7 @@ export default function AnimatedContentTested() {
     for (let i = 0; i < animatedItemsAmount; i += 1) {
       const rgbIndex = i % 3;
       const offset = 4 + (i % 5);
-      const colorOffset = (offset * 16) % 256;
+      const colorOffset = (offset * 15) % 256;
       items.push(`rgb(${rgbIndex === 0 ? 255 - colorOffset : colorOffset},${rgbIndex === 1 ? 255 - colorOffset : colorOffset},${rgbIndex === 2 ? 255 - colorOffset : colorOffset})`)
     }
     return items;

@@ -114,7 +114,7 @@ class VisibilityStatusManager {
     }
 
     getCurrentStyles() {
-        return this.currentStyles;
+        return this._styles;
     }
 
     refreshStatus() {
@@ -207,7 +207,7 @@ export const AnimatedConcealableContent = ({
     const visibilityStatusManager = useMemo(() => new VisibilityStatusManager(hidden), []);
 
     // The actual styles to apply to the container elements, will only update when the "onStatusUpdate" handler gets invoked
-    const [style, setStyle] = useState(() => visibilityStatusManager.currentStyles);
+    const [style, setStyle] = useState(() => visibilityStatusManager.getCurrentStyles());
 
     // Instance value to know which callback should be triggered after the VISIBLE or HIDDEN status styles are applied
     const shouldTriggerCallbackRef = useRef(null);
