@@ -1,10 +1,10 @@
 'use client'
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import styled from "styled-components";
 import { useRouter, usePathname } from "next/navigation";
 
-const StyledAppBar = styled.header({
+const StyledAppBar = styled.header(props => ({
   position: "sticky",
   top: 0,
   right: 0,
@@ -16,7 +16,9 @@ const StyledAppBar = styled.header({
   width: "100%",
   boxShadow:
     "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
-});
+  transition: "transform 200ms linear",
+  ...(props.$hidden ? { transform: "translateY(-100%)" } : {})
+}));
 
 const StyledAppBarTabs = styled.div({
   flex: "0 0 auto",
@@ -71,9 +73,42 @@ export default function MainLayout({
     [pathname]
   );
 
+  const headerRef = useRef(null);
+  const [isAppBarHidden, setIsAppBarHidden] = useState(false);
+
+  useEffect(() => {
+    let scrollInit = -1;
+    let scrollEnd = -1;
+
+    const scrollHandler = () => {
+      if (scrollInit < 0) {
+        scrollEnd = scrollInit = window.scrollY;
+        setTimeout(() => {
+          if (scrollEnd < headerRef.current.scrollHeight || scrollEnd < scrollInit) {
+            setIsAppBarHidden(false);
+          }
+          else if (scrollEnd > headerRef.current.scrollHeight * 5) {
+            setIsAppBarHidden(true);
+          }
+          scrollInit = -1;
+          scrollEnd = -1;
+        }, 500);
+      }
+      else {
+        scrollEnd = window.scrollY;
+      }
+    };
+
+    document.addEventListener("scroll", scrollHandler);
+
+    return () => {
+      document.removeEventListener("scroll", scrollHandler);
+    }
+  }, [])
+
   return (
     <>
-      <StyledAppBar>
+      <StyledAppBar ref={headerRef} $hidden={isAppBarHidden}>
         <StyledAppBarTabs>
           {tabsValues.map(([value, label]) => (
             <Tab
