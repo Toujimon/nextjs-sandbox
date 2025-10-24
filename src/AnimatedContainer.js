@@ -144,8 +144,6 @@ export const AnimatedContainer = ({ items, renderItem, getKeyFromItem }) => {
         const enteringItemsCount = Object.keys(enteringItemsMap).length;
         const detectedItemsSet = new Set();
 
-        console.log("debug::detected changes in the element. Time to check if the entering elements are there.", enteringItemsMap);
-
         if (enteringItemsCount && wrapperRef.current.childElementCount === list.length) {
             for (const enteringKey in enteringItemsMap) {
                 if (wrapperRef.current.children[enteringItemsMap[enteringKey]]?.getAttribute("data-animated-key") === enteringKey) {
@@ -153,8 +151,6 @@ export const AnimatedContainer = ({ items, renderItem, getKeyFromItem }) => {
                 }
             }
         }
-
-        console.log("debug::we could find the next entering items", detectedItemsSet);
 
         if (detectedItemsSet.size) {
             delayedListManager.settleEntering(...detectedItemsSet);
