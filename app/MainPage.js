@@ -13,6 +13,7 @@ const StyledTopBanner = styled.div(({ $background, $textColor }) => ({
     justifyContent: "center",
     padding: "24px",
     textAlign: "center",
+    marginBottom: "24px",
     ...($textColor ? { color: $textColor } : null),
 }));
 

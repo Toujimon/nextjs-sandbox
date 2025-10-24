@@ -7,7 +7,15 @@ export const ContentBox = styled.div`
   padding: 16px;
   border: 1px solid rgba(0,0,0,0.5);
   border-radius: 4px;
-  box-shadow: 2px 2px 4px ${({ theme }) => theme.primary};
+  box-shadow: 2px 2px 4px #0006;
+
+  & > *:first-child {
+    margin-top: 0;
+  }
+
+  & > *:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 export const StyledPageContainer = styled.div({
