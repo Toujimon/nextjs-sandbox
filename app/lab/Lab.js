@@ -37,8 +37,8 @@ export default function Lab() {
                 here have been loaded dynamically.
             </p>
             {samples.map((Sample, index) => (
-                <ContentBox>
-                    <Sample key={index}/>
+                <ContentBox key={index}>
+                    <Sample />
                 </ContentBox>
             ))}
         </StyledPageContainer>
