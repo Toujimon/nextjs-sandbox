@@ -49,8 +49,13 @@ export default function ResumeContent() {
             <ul>
                 <li>
                     <span>
+                        Ireland Government, Islands Online Transport System: Development of the frontend side application for both the public and administration pages for <a href="https://iots.ie" target="_black" rel="noreferrer">Islands Online Transport System</a>.
+                    </span>
+                </li>
+                <li>
+                    <span>
                         Comparis: Development of core components and resources to be used for
-                        the different product teams for the website comparis.ch.
+                        the different product teams for the website <a href="https://www.comparis.ch" target="_black" rel="noreferrer">Comparis.ch</a>.
                     </span>
                 </li>
                 <li>

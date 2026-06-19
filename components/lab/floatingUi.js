@@ -17,7 +17,7 @@ export default function PopperJSSample() {
           target="_blank"
           rel="noreferrer"
         >
-          PopperJs React Wrapper
+          FloatingUI React Wrapper
         </a>
         .
         {isTooltipVisible && (
