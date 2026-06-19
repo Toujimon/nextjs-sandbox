@@ -49,11 +49,13 @@ export default function MainPage() {
                     </p>
                 </ContentBox>
                 <ContentBox>
-                    I'm kind of liking the idea of the "out of the box" routing and the
-                    separation in "pages" (all of this is part of NextJs Framework), but I'm
-                    not loving how I need to either wrap the whole app on a layout
-                    component, or keep wrapping the content of each page on its own layout
-                    (many times the same one).
+                    <span>2026/06/19</span>
+                    <p>I have the next pending stuff to do for this site:</p>
+                    <ul>
+                        <li>Upgrade NextJS to its latest version.</li>
+                        <li>Check another dependencies for new versions.</li>
+                        <li>Add google login for the small financials app.</li>
+                    </ul>
                 </ContentBox>
             </StyledPageContainer>
         </>
