@@ -10,6 +10,7 @@ export default function RootLayout({
         <html lang="en">
             <head>
                 <link rel="stylesheet" href="/global.css" />
+                <script src="https://accounts.google.com/gsi/client" async></script>
             </head>
             <body>
                 <StyledComponentsRegistry>

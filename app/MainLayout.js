@@ -121,6 +121,22 @@ export default function MainLayout({
               {label}
             </Tab>
           ))}
+          <div dangerouslySetInnerHTML={{
+            __html: `
+            <script>
+            window["google_signIn"] = (...args) => {
+              alert(JSON.stringify(args,null,2));
+              debugger;
+            };
+            </script>
+            <div id="g_id_onload"
+     data-client_id="595833665256-ib6jcs1irspqv98f16m4uaqrij7uhsc4.apps.googleusercontent.com"
+     data-context="signin"
+     data-callback="google_signIn"
+     data-nonce=""
+     data-auto_select="true"
+     data-itp_support="true">
+</div>`}} />
         </StyledAppBarTabs>
       </StyledAppBar>
       {children}
