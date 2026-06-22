@@ -75,6 +75,7 @@ export default function MainLayout({
 
   const headerRef = useRef(null);
   const [isAppBarHidden, setIsAppBarHidden] = useState(false);
+  const [googleCredentials, setGoogleCredential] = useState(null);
 
   useEffect(() => {
     let scrollInit = -1;
@@ -106,6 +107,52 @@ export default function MainLayout({
     }
   }, [])
 
+  useEffect(() => {
+    if (!googleCredentials) {
+      let storedGoogleCredentials = null;
+      try {
+        storedGoogleCredentials = JSON.parse(localStorage.getItem("google-credentials")) ?? null;
+      }
+      catch (error) {
+        console.error("Failure restoring credentials", error);
+        localStorage.removeItem("google-credentials");
+      }
+      if (!storedGoogleCredentials && !document.getElementById("google-credentials-element")) {
+        console.log("debug::storedCredentials", storedGoogleCredentials);
+        window["google_credentials_getter"] = (args) => {
+          console.log("debug::Obtained credentials. Storing into local storage", args);
+          localStorage.setItem("google-credentials",JSON.stringify(args));
+          setGoogleCredential(args);
+        }
+        const googleCredentialsElement = document.createElement("div");
+        googleCredentialsElement.setAttribute("id", "google-credentials-element");
+        googleCredentialsElement.innerHTML =
+          `<div id="g_id_onload"
+     data-client_id="595833665256-ib6jcs1irspqv98f16m4uaqrij7uhsc4.apps.googleusercontent.com"
+     data-context="signin"
+     data-callback="google_credentials_getter"
+     data-nonce=""
+     data-auto_select="true"
+     data-itp_support="true">
+</div>`;
+        document.body.appendChild(googleCredentialsElement);
+        const gsiClientScriptElement = document.createElement("script");
+        gsiClientScriptElement.setAttribute("src", "https://accounts.google.com/gsi/client");
+        document.head.appendChild(gsiClientScriptElement);
+      } else if (storedGoogleCredentials) {
+        console.log("debug::storedCredentials", storedGoogleCredentials);
+        setGoogleCredential(storedGoogleCredentials);
+      }
+      return;
+    }
+
+    if (document.getElementById("google-credentials-element")) {
+      document.body.removeChild(document.getElementById("google-credentials-element"));
+      delete window["google_credentials_getter"];
+    }
+
+  }, [googleCredentials]);
+
   return (
     <>
       <StyledAppBar ref={headerRef} $hidden={isAppBarHidden}>
@@ -121,22 +168,6 @@ export default function MainLayout({
               {label}
             </Tab>
           ))}
-          <div dangerouslySetInnerHTML={{
-            __html: `
-            <script>
-            window["google_signIn"] = (...args) => {
-              alert(JSON.stringify(args,null,2));
-              debugger;
-            };
-            </script>
-            <div id="g_id_onload"
-     data-client_id="595833665256-ib6jcs1irspqv98f16m4uaqrij7uhsc4.apps.googleusercontent.com"
-     data-context="signin"
-     data-callback="google_signIn"
-     data-nonce=""
-     data-auto_select="true"
-     data-itp_support="true">
-</div>`}} />
         </StyledAppBarTabs>
       </StyledAppBar>
       {children}
