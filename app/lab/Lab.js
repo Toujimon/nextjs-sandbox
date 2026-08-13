@@ -10,7 +10,8 @@ const labSamples = [
     "intersectionDetector",
     "timeoutTester",
     "dynamicImageLoading",
-    "numberAnimation"
+    "numberAnimation",
+    "textReplacer",
 ];
 
 export default function Lab() {
