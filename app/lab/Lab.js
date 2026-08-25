@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ContentBox, StyledPageContainer } from "../../components/commonStyledElements";
 
 const labSamples = [
+    "textReplacer",
     "animatedContentTester",
     "floatingUi",
     "relevantContent",
@@ -11,7 +12,6 @@ const labSamples = [
     "timeoutTester",
     "dynamicImageLoading",
     "numberAnimation",
-    "textReplacer",
 ];
 
 export default function Lab() {
